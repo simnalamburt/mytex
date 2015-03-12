@@ -1,3 +1,28 @@
 #!/usr/bin/env ruby
 
-puts 'Hello, world!'
+if ARGV.size == 0
+  puts <<HELP
+My little LaTeX helper
+
+Usage:
+    mytex <input>
+HELP
+  exit 0
+end
+
+unless tmpdir = ENV['TMPDIR']
+  puts 'Please set $TMPDIR variable'
+  exit 1
+end
+
+
+input = File.expand_path ARGV[0]
+header = File.expand_path 'preamble.tex', File.dirname(__FILE__)
+tmpdir = File.join tmpdir, File.basename(__FILE__)
+tex = File.join tmpdir, File.basename(input, '.*') + '.tex'
+pdf = File.join tmpdir, File.basename(input, '.*') + '.pdf'
+
+`mkdir -p "#{tmpdir}"`
+`pandoc -s -t latex -H "#{header}" --base-header-level=1 -o #{tex} #{input}`
+`xelatex --shell-escape -halt-on-error -interaction=nonstopmode -output-directory="#{tmpdir}" #{tex}`
+`mv #{pdf} .`
