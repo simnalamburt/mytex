@@ -23,6 +23,6 @@ tex = File.join tmpdir, File.basename(input, '.*') + '.tex'
 pdf = File.join tmpdir, File.basename(input, '.*') + '.pdf'
 
 `mkdir -p "#{tmpdir}"`
-`pandoc -s -t latex -H "#{header}" --base-header-level=1 -o #{tex} #{input}`
-`xelatex --shell-escape -halt-on-error -interaction=nonstopmode -output-directory="#{tmpdir}" #{tex}`
-`mv #{pdf} .`
+`pandoc -s -t latex -H "#{header}" --base-header-level=1 -o "#{tex}" "#{input}"`
+`xelatex --shell-escape -halt-on-error -interaction=nonstopmode -output-directory="#{tmpdir}" "#{tex}"`
+`mv "#{pdf}" .`
